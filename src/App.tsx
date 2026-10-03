@@ -83,7 +83,7 @@ function AppContent({ isPasswordProtected, onLockPortal }: AppContentProps) {
 
       {/* Main Content Area - dynamically scaled to viewing area with fluid scrolling */}
       <main
-        className="flex-1 max-w-7xl w-full mx-auto px-2.5 sm:px-5 lg:px-8 pt-16 pb-24 md:pb-10 transition-all overflow-y-auto"
+        className="flex-1 max-w-7xl w-full mx-auto px-2.5 sm:px-5 lg:px-8 pt-16 pb-24 md:pb-10 transition-all"
       >
         {activeTab === 'dashboard' && (
           <GrowthDashboardView

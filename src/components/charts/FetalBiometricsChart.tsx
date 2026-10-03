@@ -256,82 +256,82 @@ export const FetalBiometricsChart: React.FC<FetalBiometricsChartProps> = ({
   }, [yMin, yMax]);
 
   return (
-    <div className="bg-white rounded-xl border border-stone-200 p-4 md:p-6 shadow-xs">
+    <div className="bg-white dark:bg-stone-900 rounded-2xl md:rounded-3xl border border-stone-200 dark:border-stone-800 p-4 md:p-6 shadow-xs transition-colors">
       {/* Header & Metric Picker */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-stone-100">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-stone-100 dark:border-stone-800">
         <div>
           <div className="flex flex-wrap items-center gap-2">
-            <h3 className="text-base font-semibold text-stone-900">
+            <h3 className="text-base font-bold text-stone-900 dark:text-white">
               Ultrasound Biometrics & Fetal Growth
             </h3>
             {onOpenFormulaModal ? (
               <button
                 onClick={onOpenFormulaModal}
-                className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-amber-100 hover:bg-amber-200 text-amber-900 text-[11px] font-semibold transition-colors"
+                className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-lg bg-amber-100 hover:bg-amber-200 dark:bg-amber-950/80 dark:hover:bg-amber-900 text-amber-900 dark:text-amber-300 text-[11px] font-semibold border border-amber-200/60 dark:border-amber-800/60 transition-colors"
                 title="View / change clinical formula"
               >
-                <BookOpen className="w-3 h-3 text-amber-700" />
+                <BookOpen className="w-3 h-3 text-amber-700 dark:text-amber-400" />
                 <span>Formula: {formulaSettings.fetalEfwFormula.toUpperCase()}</span>
               </button>
             ) : (
-              <span className="text-xs text-amber-900 font-semibold bg-amber-100 px-2 py-0.5 rounded">
+              <span className="text-xs text-amber-900 dark:text-amber-300 font-semibold bg-amber-100 dark:bg-amber-950/80 px-2 py-0.5 rounded-lg border border-amber-200/60 dark:border-amber-800/60">
                 Formula: {formulaSettings.fetalEfwFormula.toUpperCase()}
               </span>
             )}
           </div>
-          <p className="text-xs text-stone-500 mt-0.5">
+          <p className="text-xs text-stone-500 dark:text-stone-400 mt-1">
             Reference bands (5th–95th percentile) for fetal anatomical dimensions across gestational weeks.
           </p>
         </div>
 
         {/* Metric Segmented Control */}
-        <div className="inline-flex flex-wrap p-1 bg-stone-100 rounded-lg">
+        <div className="inline-flex flex-wrap p-1 bg-stone-100 dark:bg-stone-800 rounded-xl border border-stone-200/60 dark:border-stone-700/60">
           <button
             onClick={() => setSelectedMetric('efw')}
-            className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${
+            className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors ${
               selectedMetric === 'efw'
-                ? 'bg-white text-stone-900 shadow-xs'
-                : 'text-stone-600 hover:text-stone-900'
+                ? 'bg-white dark:bg-stone-900 text-stone-900 dark:text-white shadow-2xs font-bold'
+                : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-white'
             }`}
           >
             Weight (EFW)
           </button>
           <button
             onClick={() => setSelectedMetric('bpd')}
-            className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${
+            className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors ${
               selectedMetric === 'bpd'
-                ? 'bg-white text-stone-900 shadow-xs'
-                : 'text-stone-600 hover:text-stone-900'
+                ? 'bg-white dark:bg-stone-900 text-stone-900 dark:text-white shadow-2xs font-bold'
+                : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-white'
             }`}
           >
             BPD (Head)
           </button>
           <button
             onClick={() => setSelectedMetric('hc')}
-            className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${
+            className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors ${
               selectedMetric === 'hc'
-                ? 'bg-white text-stone-900 shadow-xs'
-                : 'text-stone-600 hover:text-stone-900'
+                ? 'bg-white dark:bg-stone-900 text-stone-900 dark:text-white shadow-2xs font-bold'
+                : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-white'
             }`}
           >
             HC (Circumference)
           </button>
           <button
             onClick={() => setSelectedMetric('ac')}
-            className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${
+            className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors ${
               selectedMetric === 'ac'
-                ? 'bg-white text-stone-900 shadow-xs'
-                : 'text-stone-600 hover:text-stone-900'
+                ? 'bg-white dark:bg-stone-900 text-stone-900 dark:text-white shadow-2xs font-bold'
+                : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-white'
             }`}
           >
             AC (Abdomen)
           </button>
           <button
             onClick={() => setSelectedMetric('fl')}
-            className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${
+            className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors ${
               selectedMetric === 'fl'
-                ? 'bg-white text-stone-900 shadow-xs'
-                : 'text-stone-600 hover:text-stone-900'
+                ? 'bg-white dark:bg-stone-900 text-stone-900 dark:text-white shadow-2xs font-bold'
+                : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-white'
             }`}
           >
             FL (Femur)
@@ -370,18 +370,18 @@ export const FetalBiometricsChart: React.FC<FetalBiometricsChartProps> = ({
           )}
         </div>
       ) : latest ? (
-        <div className="mt-3 py-2 px-3 bg-amber-50/60 rounded-lg flex flex-wrap items-center justify-between text-xs text-amber-900 gap-2 border border-amber-200/60">
-          <div className="flex items-center gap-2">
-            <span className="font-semibold text-stone-900">Latest Ultrasound Scan:</span>
-            <span className="font-bold text-amber-950">{currentCfg.formatVal(latest.val)}</span>
-            <span aria-hidden="true" className="text-stone-400">·</span>
+        <div className="mt-3 py-2.5 px-3.5 bg-stone-50 dark:bg-stone-800/60 rounded-xl flex flex-wrap items-center justify-between text-xs text-stone-700 dark:text-stone-300 gap-2 border border-stone-200/60 dark:border-stone-700/60 transition-colors">
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="font-bold text-stone-900 dark:text-white">Latest Ultrasound Scan:</span>
+            <span className="font-mono font-bold text-amber-900 dark:text-amber-400">{currentCfg.formatVal(latest.val)}</span>
+            <span aria-hidden="true" className="text-stone-300 dark:text-stone-600">·</span>
             <span>Week {latest.gestationalWeeks}d{latest.gestationalDays}</span>
-            <span aria-hidden="true" className="text-stone-400">·</span>
+            <span aria-hidden="true" className="text-stone-300 dark:text-stone-600">·</span>
             <span>Date: {latest.date}</span>
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-stone-600">
-              50th % Median for Week: {currentCfg.formatVal(latest.ref50)}
+            <span className="text-stone-600 dark:text-stone-400">
+              50th % Median for Week: <strong className="text-stone-800 dark:text-stone-200">{currentCfg.formatVal(latest.ref50)}</strong>
             </span>
           </div>
         </div>
@@ -747,24 +747,24 @@ export const FetalBiometricsChart: React.FC<FetalBiometricsChartProps> = ({
       </div>
 
       {/* Footer */}
-      <div className="mt-4 pt-3 border-t border-stone-100 flex flex-wrap items-center justify-between text-xs text-stone-500 gap-y-2">
+      <div className="mt-4 pt-3.5 border-t border-stone-100 dark:border-stone-800 flex flex-wrap items-center justify-between text-xs text-stone-500 dark:text-stone-400 gap-y-2">
         <div className="flex flex-wrap items-center gap-4">
           <div className="flex items-center gap-1.5">
-            <span className="w-3 h-0.5 bg-amber-700"></span>
-            <span className="w-2 h-2 rounded-full bg-amber-700 border border-white"></span>
-            <span className="text-stone-700 font-medium">{profile.name} Ultrasounds</span>
+            <span className="w-3 h-0.5 bg-amber-600 dark:bg-amber-400 rounded-full"></span>
+            <span className="w-2 h-2 rounded-full bg-amber-600 dark:bg-amber-400 border border-white dark:border-stone-900"></span>
+            <span className="text-stone-700 dark:text-stone-200 font-semibold">{profile.name} Ultrasounds</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <span className="w-3 h-0.5 bg-amber-600"></span>
-            <span>Hadlock 50th %</span>
+            <span className="w-3 h-0.5 bg-amber-600 dark:bg-amber-400 rounded-full"></span>
+            <span className="text-stone-600 dark:text-stone-300">Hadlock 50th %</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <span className="w-3 h-2 bg-amber-100 rounded-xs"></span>
-            <span>5th – 95th % Normal Range</span>
+            <span className="w-3 h-2 bg-amber-100 dark:bg-amber-950/80 rounded-xs border border-amber-200/60 dark:border-amber-800/60"></span>
+            <span className="text-stone-600 dark:text-stone-300">5th – 95th % Normal Range</span>
           </div>
         </div>
 
-        <div className="flex items-center gap-1 text-[11px] text-stone-400">
+        <div className="flex items-center gap-1 text-[11px] text-stone-400 dark:text-stone-500">
           <Info className="w-3.5 h-3.5" />
           <span>Hadlock ultrasound regression curves</span>
         </div>

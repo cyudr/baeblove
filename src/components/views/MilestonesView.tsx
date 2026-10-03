@@ -107,7 +107,7 @@ export const MilestonesView: React.FC<MilestonesViewProps> = ({
   return (
     <div className="space-y-6">
       {/* Header with Title & Action */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white dark:bg-stone-900 rounded-2xl border border-stone-200 dark:border-stone-800 p-5 md:p-6 shadow-xs transition-colors">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white dark:bg-stone-900 rounded-2xl md:rounded-3xl border border-stone-200 dark:border-stone-800 p-5 md:p-6 shadow-xs transition-colors">
         <div>
           <div className="flex items-center gap-2">
             <h2 className="text-xl font-bold text-stone-900 dark:text-white">
@@ -130,7 +130,7 @@ export const MilestonesView: React.FC<MilestonesViewProps> = ({
       </div>
 
       {/* Age Bracket Horizontal Carousel */}
-      <div className="bg-white dark:bg-stone-900 rounded-xl border border-stone-200 dark:border-stone-800 p-3 shadow-xs transition-colors">
+      <div className="bg-white dark:bg-stone-900 rounded-2xl md:rounded-3xl border border-stone-200 dark:border-stone-800 p-3.5 shadow-xs transition-colors">
         <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
           {AGE_BRACKETS.map((bracket) => {
             const isSelected = selectedAgeMonths === bracket.months;
@@ -143,9 +143,9 @@ export const MilestonesView: React.FC<MilestonesViewProps> = ({
               <button
                 key={bracket.months}
                 onClick={() => setSelectedAgeMonths(bracket.months)}
-                className={`shrink-0 px-3.5 py-2 rounded-lg text-xs font-medium text-left transition-all ${
+                className={`shrink-0 px-3.5 py-2 rounded-xl text-xs font-medium text-left transition-all ${
                   isSelected
-                    ? 'bg-stone-900 dark:bg-stone-100 text-white dark:text-stone-900 shadow-xs'
+                    ? 'bg-stone-900 dark:bg-stone-100 text-white dark:text-stone-900 shadow-xs font-bold'
                     : 'bg-stone-50 dark:bg-stone-800/60 hover:bg-stone-100 dark:hover:bg-stone-800 text-stone-700 dark:text-stone-300 border border-stone-200/60 dark:border-stone-700/60'
                 }`}
               >
@@ -160,7 +160,7 @@ export const MilestonesView: React.FC<MilestonesViewProps> = ({
       </div>
 
       {/* Current Bracket Header & Summary */}
-      <div className="bg-white dark:bg-stone-900 rounded-xl border border-stone-200 dark:border-stone-800 p-4 md:p-5 shadow-xs transition-colors">
+      <div className="bg-white dark:bg-stone-900 rounded-2xl md:rounded-3xl border border-stone-200 dark:border-stone-800 p-5 md:p-6 shadow-xs transition-colors">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 pb-3 border-b border-stone-100 dark:border-stone-800">
           <div>
             <div className="flex items-center gap-2">
@@ -452,10 +452,10 @@ export const MilestonesView: React.FC<MilestonesViewProps> = ({
 
       {/* Custom Recorded Family Milestones */}
       {customMilestones.length > 0 && (
-        <div className="bg-white dark:bg-stone-900 rounded-xl border border-stone-200 dark:border-stone-800 p-5 shadow-xs transition-colors">
+        <div className="bg-white dark:bg-stone-900 rounded-2xl md:rounded-3xl border border-stone-200 dark:border-stone-800 p-5 md:p-6 shadow-xs transition-colors">
           <div className="flex items-center justify-between pb-3 border-b border-stone-100 dark:border-stone-800 mb-4">
             <div className="flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-amber-600" />
+              <Sparkles className="w-4 h-4 text-amber-600 dark:text-amber-400" />
               <h3 className="text-sm font-semibold text-stone-900 dark:text-white">
                 Custom Family Memories & Milestones
               </h3>
@@ -467,7 +467,7 @@ export const MilestonesView: React.FC<MilestonesViewProps> = ({
             {customMilestones.map((m) => (
               <div
                 key={m.milestoneId}
-                className="p-3.5 bg-stone-50 dark:bg-stone-800/60 rounded-lg border border-stone-200/60 dark:border-stone-700/60 text-xs text-stone-700 dark:text-stone-300 flex justify-between items-start"
+                className="p-3.5 bg-stone-50 dark:bg-stone-800/60 rounded-xl border border-stone-200/60 dark:border-stone-700/60 text-xs text-stone-700 dark:text-stone-300 flex justify-between items-start"
               >
                 <div>
                   <div className="font-semibold text-stone-900 dark:text-white text-sm">{m.customTitle}</div>
@@ -489,7 +489,7 @@ export const MilestonesView: React.FC<MilestonesViewProps> = ({
       )}
 
       {/* CDC Red Flag Signs - When to talk with your pediatrician */}
-      <div className="bg-rose-50/70 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-900/40 rounded-xl p-5 text-xs text-rose-950 dark:text-rose-200 transition-colors">
+      <div className="bg-rose-50/70 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-900/40 rounded-2xl md:rounded-3xl p-5 md:p-6 text-xs text-rose-950 dark:text-rose-200 transition-colors">
         <div className="flex items-center gap-2 mb-2 font-bold text-sm text-rose-900 dark:text-rose-300">
           <AlertTriangle className="w-4 h-4 text-rose-700 dark:text-rose-400" />
           <span>When to Talk with Your Pediatrician ({currentBracket.label})</span>

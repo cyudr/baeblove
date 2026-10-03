@@ -1,16 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useApp } from '../../context/AppContext';
 import { calculatePercentile, UnitConverter } from '../../data/growthStandards';
 import {
   ClipboardList,
   Plus,
   Trash2,
-  Calendar,
-  Scale,
-  Ruler,
-  Brain,
   FileText,
-  Stethoscope,
 } from 'lucide-react';
 
 interface HistoryLogsViewProps {
@@ -37,16 +32,18 @@ export const HistoryLogsView: React.FC<HistoryLogsViewProps> = ({
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white rounded-2xl border border-stone-200 p-5 md:p-6 shadow-xs">
+      {/* Header Card */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white dark:bg-stone-900 rounded-3xl border border-stone-200 dark:border-stone-800 p-5 md:p-6 shadow-xs transition-colors">
         <div>
-          <div className="flex items-center gap-2">
-            <ClipboardList className="w-5 h-5 text-stone-700" />
-            <h2 className="text-xl font-bold text-stone-900">
+          <div className="flex items-center gap-2.5">
+            <div className="w-9 h-9 rounded-2xl bg-stone-100 dark:bg-stone-800 text-stone-800 dark:text-stone-200 flex items-center justify-center shadow-2xs">
+              <ClipboardList className="w-4 h-4" />
+            </div>
+            <h2 className="text-xl font-bold text-stone-900 dark:text-white">
               Measurement Logs & History
             </h2>
           </div>
-          <p className="text-xs text-stone-500 mt-1">
+          <p className="text-xs text-stone-500 dark:text-stone-400 mt-1">
             Complete record of clinical checkups, ultrasound scans, and observations for {activeProfile.name}.
           </p>
         </div>
@@ -54,14 +51,14 @@ export const HistoryLogsView: React.FC<HistoryLogsViewProps> = ({
         <div className="flex items-center gap-2">
           <button
             onClick={onOpenExportModal}
-            className="px-3.5 py-2 text-xs font-medium text-stone-700 hover:text-stone-900 bg-stone-100 hover:bg-stone-200 rounded-xl transition-colors flex items-center gap-1.5"
+            className="px-3.5 py-2 text-xs font-semibold text-stone-700 dark:text-stone-200 hover:text-stone-900 dark:hover:text-white bg-stone-100 dark:bg-stone-800 hover:bg-stone-200 dark:hover:bg-stone-700 border border-stone-200/60 dark:border-stone-700/60 rounded-xl transition-colors flex items-center gap-1.5 cursor-pointer shadow-2xs"
           >
-            <FileText className="w-4 h-4 text-stone-500" />
+            <FileText className="w-3.5 h-3.5 text-stone-500 dark:text-stone-400" />
             <span>Generate Report</span>
           </button>
           <button
             onClick={onOpenLogModal}
-            className="px-4 py-2 text-xs font-semibold text-white bg-stone-900 hover:bg-stone-800 rounded-xl shadow-xs transition-colors flex items-center gap-1.5"
+            className="px-4 py-2 text-xs font-bold text-white bg-stone-900 hover:bg-stone-800 dark:bg-stone-100 dark:hover:bg-white dark:text-stone-900 rounded-xl shadow-xs transition-all flex items-center gap-1.5 cursor-pointer hover:scale-105 active:scale-95"
           >
             <Plus className="w-3.5 h-3.5" />
             <span>Add New Entry</span>
@@ -70,17 +67,17 @@ export const HistoryLogsView: React.FC<HistoryLogsViewProps> = ({
       </div>
 
       {/* Main Table or Card List */}
-      <div className="bg-white rounded-2xl border border-stone-200 shadow-xs overflow-hidden">
+      <div className="bg-white dark:bg-stone-900 rounded-3xl border border-stone-200 dark:border-stone-800 shadow-xs overflow-hidden transition-colors">
         {isBaby ? (
           activeBabyMeasurements.length === 0 ? (
-            <div className="p-8 text-center text-xs text-stone-500">
-              No baby measurements recorded yet. Click "Add New Entry" to log Liam's checkup.
+            <div className="p-12 text-center text-xs text-stone-500 dark:text-stone-400">
+              No baby measurements recorded yet. Click &quot;Add New Entry&quot; to log a checkup.
             </div>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs border-collapse">
                 <thead>
-                  <tr className="bg-stone-50/70 border-b border-stone-200 text-stone-500 text-[11px] font-semibold">
+                  <tr className="bg-stone-50/80 dark:bg-stone-850/80 border-b border-stone-200 dark:border-stone-800 text-stone-500 dark:text-stone-400 text-[11px] font-semibold">
                     <th className="py-3 px-4">Date</th>
                     <th className="py-3 px-4">Age</th>
                     <th className="py-3 px-4">Weight</th>
@@ -91,18 +88,18 @@ export const HistoryLogsView: React.FC<HistoryLogsViewProps> = ({
                     <th className="py-3 px-4 text-right">Action</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-stone-100 text-stone-700">
+                <tbody className="divide-y divide-stone-100 dark:divide-stone-800 text-stone-700 dark:text-stone-300">
                   {activeBabyMeasurements.map((m) => {
                     const weightPct = m.weightKg
                       ? calculatePercentile(m.weightKg, m.ageInMonths, 'weight', activeProfile.gender)
                       : null;
 
                     return (
-                      <tr key={m.id} className="hover:bg-stone-50/50 transition-colors">
-                        <td className="py-3.5 px-4 font-medium text-stone-900 whitespace-nowrap">
+                      <tr key={m.id} className="hover:bg-stone-50/70 dark:hover:bg-stone-800/40 transition-colors">
+                        <td className="py-3.5 px-4 font-bold text-stone-900 dark:text-white whitespace-nowrap">
                           {m.date}
                           {m.pediatricianVisit && (
-                            <span className="block text-[10px] text-emerald-800 font-normal">
+                            <span className="block text-[10px] text-emerald-700 dark:text-emerald-400 font-semibold">
                               Well-child check
                             </span>
                           )}
@@ -110,12 +107,12 @@ export const HistoryLogsView: React.FC<HistoryLogsViewProps> = ({
                         <td className="py-3.5 px-4 whitespace-nowrap font-mono">
                           {m.ageInMonths} mo
                         </td>
-                        <td className="py-3.5 px-4 font-mono whitespace-nowrap">
+                        <td className="py-3.5 px-4 font-mono font-bold whitespace-nowrap">
                           {m.weightKg ? UnitConverter.formatWeight(m.weightKg, unitSystem) : '—'}
                         </td>
                         <td className="py-3.5 px-4 whitespace-nowrap">
                           {weightPct ? (
-                            <span className="font-semibold text-emerald-800">
+                            <span className="font-bold text-emerald-800 dark:text-emerald-400 px-2 py-0.5 rounded-full bg-emerald-100/70 dark:bg-emerald-950/70 border border-emerald-200/60 dark:border-emerald-800/60">
                               {weightPct.percentile}th %ile
                             </span>
                           ) : (
@@ -130,7 +127,7 @@ export const HistoryLogsView: React.FC<HistoryLogsViewProps> = ({
                             ? UnitConverter.formatLength(m.headCircumferenceCm, unitSystem)
                             : '—'}
                         </td>
-                        <td className="py-3.5 px-4 max-w-xs truncate text-stone-500">
+                        <td className="py-3.5 px-4 max-w-xs truncate text-stone-500 dark:text-stone-400">
                           {m.notes || '—'}
                         </td>
                         <td className="py-3.5 px-4 text-right whitespace-nowrap">
@@ -140,7 +137,7 @@ export const HistoryLogsView: React.FC<HistoryLogsViewProps> = ({
                                 deleteBabyMeasurement(m.id);
                               }
                             }}
-                            className="p-1.5 text-stone-400 hover:text-rose-600 rounded-lg transition-colors"
+                            className="p-1.5 text-stone-400 hover:text-rose-600 dark:hover:text-rose-400 rounded-lg hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors cursor-pointer"
                             title="Delete"
                           >
                             <Trash2 className="w-4 h-4" />
@@ -154,14 +151,14 @@ export const HistoryLogsView: React.FC<HistoryLogsViewProps> = ({
             </div>
           )
         ) : activeFetalMeasurements.length === 0 ? (
-          <div className="p-8 text-center text-xs text-stone-500">
-            No ultrasound scans logged yet. Click "Add New Entry" to log a scan.
+          <div className="p-12 text-center text-xs text-stone-500 dark:text-stone-400">
+            No ultrasound scans logged yet. Click &quot;Add New Entry&quot; to log a scan.
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs border-collapse">
               <thead>
-                <tr className="bg-stone-50/70 border-b border-stone-200 text-stone-500 text-[11px] font-semibold">
+                <tr className="bg-stone-50/80 dark:bg-stone-850/80 border-b border-stone-200 dark:border-stone-800 text-stone-500 dark:text-stone-400 text-[11px] font-semibold">
                   <th className="py-3 px-4">Date</th>
                   <th className="py-3 px-4">Gestational Age</th>
                   <th className="py-3 px-4">EFW (Weight)</th>
@@ -175,16 +172,16 @@ export const HistoryLogsView: React.FC<HistoryLogsViewProps> = ({
                   <th className="py-3 px-4 text-right">Action</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-stone-100 text-stone-700">
+              <tbody className="divide-y divide-stone-100 dark:divide-stone-800 text-stone-700 dark:text-stone-300">
                 {activeFetalMeasurements.map((m) => (
-                  <tr key={m.id} className="hover:bg-stone-50/50 transition-colors">
-                    <td className="py-3.5 px-4 font-medium text-stone-900 whitespace-nowrap">
+                  <tr key={m.id} className="hover:bg-stone-50/70 dark:hover:bg-stone-800/40 transition-colors">
+                    <td className="py-3.5 px-4 font-bold text-stone-900 dark:text-white whitespace-nowrap">
                       {m.date}
                     </td>
-                    <td className="py-3.5 px-4 whitespace-nowrap font-mono font-semibold text-amber-900">
+                    <td className="py-3.5 px-4 whitespace-nowrap font-mono font-bold text-amber-900 dark:text-amber-400">
                       {m.gestationalWeeks}w {m.gestationalDays}d
                     </td>
-                    <td className="py-3.5 px-4 font-mono whitespace-nowrap font-semibold">
+                    <td className="py-3.5 px-4 font-mono font-bold text-emerald-800 dark:text-emerald-400 whitespace-nowrap">
                       {m.efwGrams ? UnitConverter.formatFetalWeight(m.efwGrams, unitSystem) : '—'}
                     </td>
                     <td className="py-3.5 px-4 font-mono whitespace-nowrap">
@@ -209,7 +206,7 @@ export const HistoryLogsView: React.FC<HistoryLogsViewProps> = ({
                           : `${(m.maternalWeightKg * 2.20462).toFixed(1)} lb`
                         : '—'}
                     </td>
-                    <td className="py-3.5 px-4 max-w-xs truncate text-stone-500">
+                    <td className="py-3.5 px-4 max-w-xs truncate text-stone-500 dark:text-stone-400">
                       {m.notes || m.scanLocation || '—'}
                     </td>
                     <td className="py-3.5 px-4 text-right whitespace-nowrap">
@@ -219,7 +216,7 @@ export const HistoryLogsView: React.FC<HistoryLogsViewProps> = ({
                             deleteFetalMeasurement(m.id);
                           }
                         }}
-                        className="p-1.5 text-stone-400 hover:text-rose-600 rounded-lg transition-colors"
+                        className="p-1.5 text-stone-400 hover:text-rose-600 dark:hover:text-rose-400 rounded-lg hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors cursor-pointer"
                         title="Delete"
                       >
                         <Trash2 className="w-4 h-4" />

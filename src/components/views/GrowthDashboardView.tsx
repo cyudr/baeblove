@@ -270,64 +270,11 @@ export const GrowthDashboardView: React.FC<GrowthDashboardViewProps> = ({
 
   return (
     <>
-      <div className="space-y-10 pb-16 select-none">
-        {/* ============================================================== */}
-        {/* STICKY QUICK-ANCHOR PILL BAR (Effortless scrolling across cards)*/}
-        {/* ============================================================== */}
-        <div className="sticky top-16 z-30 -mx-3 sm:-mx-6 px-3 sm:px-6 py-2.5 bg-stone-100/90 dark:bg-stone-950/90 backdrop-blur-md border-b border-stone-200/70 dark:border-stone-800/70 transition-colors">
-          <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar text-xs">
-            <span className="text-[11px] font-bold text-stone-600 dark:text-stone-300 uppercase tracking-wider shrink-0 mr-1 flex items-center gap-1">
-              <span>Scroll to:</span>
-            </span>
-            <button
-              onClick={() => scrollToSection('card-cockpit')}
-              className="px-3 py-1 rounded-full bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 hover:border-emerald-400 dark:hover:border-emerald-600 text-stone-700 dark:text-stone-300 hover:text-emerald-800 dark:hover:text-emerald-300 font-semibold shrink-0 transition-all shadow-2xs hover:scale-[1.02] active:scale-[0.98]"
-            >
-              ⚡ Cockpit & Vitals
-            </button>
-            <button
-              onClick={() => scrollToSection('card-stage-wonder')}
-              className="px-3 py-1 rounded-full bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 hover:border-amber-400 dark:hover:border-amber-600 text-stone-700 dark:text-stone-300 hover:text-amber-800 dark:hover:text-amber-300 font-semibold shrink-0 transition-all shadow-2xs hover:scale-[1.02] active:scale-[0.98]"
-            >
-              🌟 Stage & Biological Wonder
-            </button>
-            <button
-              onClick={() => scrollToSection('card-recommendations')}
-              className="px-3 py-1 rounded-full bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 hover:border-indigo-400 dark:hover:border-indigo-600 text-stone-700 dark:text-stone-300 hover:text-indigo-800 dark:hover:text-indigo-300 font-semibold shrink-0 transition-all shadow-2xs hover:scale-[1.02] active:scale-[0.98]"
-            >
-              🛡️ 4 Pillars of Care
-            </button>
-            <button
-              onClick={() => scrollToSection('card-charts')}
-              className="px-3 py-1 rounded-full bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 hover:border-emerald-400 dark:hover:border-emerald-600 text-stone-700 dark:text-stone-300 hover:text-emerald-800 dark:hover:text-emerald-300 font-semibold shrink-0 transition-all shadow-2xs hover:scale-[1.02] active:scale-[0.98]"
-            >
-              📈 Growth & Biometrics Curves
-            </button>
-            <button
-              onClick={() => scrollToSection('card-milestones-activity')}
-              className="px-3 py-1 rounded-full bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 hover:border-rose-400 dark:hover:border-rose-600 text-stone-700 dark:text-stone-300 hover:text-rose-800 dark:hover:text-rose-300 font-semibold shrink-0 transition-all shadow-2xs hover:scale-[1.02] active:scale-[0.98]"
-            >
-              {isBaby ? '✅ CDC Milestones' : '💓 Fetal Activity & Kicks'}
-            </button>
-            <button
-              onClick={() => scrollToSection('card-clinical-logs')}
-              className="px-3 py-1 rounded-full bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 hover:border-teal-400 dark:hover:border-teal-600 text-stone-700 dark:text-stone-300 hover:text-teal-800 dark:hover:text-teal-300 font-semibold shrink-0 transition-all shadow-2xs hover:scale-[1.02] active:scale-[0.98]"
-            >
-              📋 Medical Visit Logs
-            </button>
-            <button
-              onClick={() => scrollToSection('card-love-notes')}
-              className="px-3 py-1 rounded-full bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 hover:border-rose-400 dark:hover:border-rose-600 text-stone-700 dark:text-stone-300 hover:text-rose-800 dark:hover:text-rose-300 font-semibold shrink-0 transition-all shadow-2xs hover:scale-[1.02] active:scale-[0.98]"
-            >
-              💌 Keepsake Notes ({activeLoveNotes.length})
-            </button>
-          </div>
-        </div>
-
+      <div className="space-y-6 select-none">
         {/* ============================================================== */}
         {/* CARD 01: ASYMMETRIC BENTO COCKPIT & CORE VITALS                 */}
         {/* ============================================================== */}
-        <section id="card-cockpit" className="space-y-4 scroll-mt-28">
+        <section id="card-cockpit" className="space-y-4">
           {/* Hero Banner with Nursery/Womb Ambiance and Clickable Pointers */}
           <div
             className={`rounded-3xl border shadow-sm p-5 sm:p-6 transition-all relative overflow-hidden ${
@@ -1324,23 +1271,21 @@ export const GrowthDashboardView: React.FC<GrowthDashboardViewProps> = ({
           </div>
 
           {/* Interactive Chart Component embedded right in overview */}
-          <div className="bg-white dark:bg-stone-900 rounded-3xl border border-stone-200 dark:border-stone-800 p-5 shadow-xs transition-colors">
-            {isBaby ? (
-              <InteractiveGrowthChart
-                profile={activeProfile}
-                measurements={activeBabyMeasurements}
-                unitSystem={unitSystem}
-                onOpenFormulaModal={onOpenFormulaModal}
-              />
-            ) : (
-              <FetalBiometricsChart
-                profile={activeProfile}
-                measurements={activeFetalMeasurements}
-                unitSystem={unitSystem}
-                onOpenFormulaModal={onOpenFormulaModal}
-              />
-            )}
-          </div>
+          {isBaby ? (
+            <InteractiveGrowthChart
+              profile={activeProfile}
+              measurements={activeBabyMeasurements}
+              unitSystem={unitSystem}
+              onOpenFormulaModal={onOpenFormulaModal}
+            />
+          ) : (
+            <FetalBiometricsChart
+              profile={activeProfile}
+              measurements={activeFetalMeasurements}
+              unitSystem={unitSystem}
+              onOpenFormulaModal={onOpenFormulaModal}
+            />
+          )}
         </section>
 
         {/* ============================================================== */}

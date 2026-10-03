@@ -245,33 +245,33 @@ export const InteractiveGrowthChart: React.FC<InteractiveGrowthChartProps> = ({
   };
 
   return (
-    <div className="bg-white rounded-xl border border-stone-200 p-4 md:p-6 shadow-xs">
+    <div className="bg-white dark:bg-stone-900 rounded-2xl md:rounded-3xl border border-stone-200 dark:border-stone-800 p-4 md:p-6 shadow-xs transition-colors">
       {/* Header controls & segmented buttons */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-stone-100">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-stone-100 dark:border-stone-800">
         <div>
           <div className="flex flex-wrap items-center gap-2">
-            <h3 className="text-base font-semibold text-stone-900">
+            <h3 className="text-base font-bold text-stone-900 dark:text-white">
               WHO Growth Standards & Percentiles
             </h3>
-            <span className="text-xs text-stone-500">
+            <span className="text-xs text-stone-500 dark:text-stone-400">
               {profile.gender === 'boy' ? 'Boys' : 'Girls'} · 0–{maxAgeBracket}m
             </span>
             {onOpenFormulaModal ? (
               <button
                 onClick={onOpenFormulaModal}
-                className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-100 hover:bg-emerald-200 text-emerald-900 text-[11px] font-semibold transition-colors"
+                className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-lg bg-emerald-100 hover:bg-emerald-200 dark:bg-emerald-950/80 dark:hover:bg-emerald-900 text-emerald-900 dark:text-emerald-300 text-[11px] font-semibold border border-emerald-200/60 dark:border-emerald-800/60 transition-colors"
                 title="View mathematical LMS formula and peer-reviewed sources"
               >
-                <BookOpen className="w-3 h-3 text-emerald-700" />
+                <BookOpen className="w-3 h-3 text-emerald-700 dark:text-emerald-400" />
                 <span>WHO LMS Standard (2006)</span>
               </button>
             ) : (
-              <span className="text-xs text-emerald-900 font-semibold bg-emerald-100 px-2 py-0.5 rounded">
+              <span className="text-xs text-emerald-900 dark:text-emerald-300 font-semibold bg-emerald-100 dark:bg-emerald-950/80 px-2 py-0.5 rounded-lg border border-emerald-200/60 dark:border-emerald-800/60">
                 WHO LMS Standard
               </span>
             )}
           </div>
-          <p className="text-xs text-stone-500 mt-0.5">
+          <p className="text-xs text-stone-500 dark:text-stone-400 mt-1">
             Compare measurements against World Health Organization Multicentre child growth references.
           </p>
         </div>
@@ -279,23 +279,23 @@ export const InteractiveGrowthChart: React.FC<InteractiveGrowthChartProps> = ({
         {/* Metric Segmented Control & Time Scale */}
         <div className="flex flex-wrap items-center gap-2">
           {/* Time scale toggle: Months vs Weeks */}
-          <div className="inline-flex p-0.5 bg-stone-100 rounded-lg">
+          <div className="inline-flex p-0.5 bg-stone-100 dark:bg-stone-800 rounded-xl border border-stone-200/60 dark:border-stone-700/60">
             <button
               onClick={() => setTimeScale('months')}
-              className={`px-2.5 py-1 text-xs font-semibold rounded-md transition-colors ${
+              className={`px-2.5 py-1 text-xs font-semibold rounded-lg transition-colors ${
                 timeScale === 'months'
-                  ? 'bg-white text-stone-900 shadow-xs'
-                  : 'text-stone-500 hover:text-stone-800'
+                  ? 'bg-white dark:bg-stone-900 text-stone-900 dark:text-white shadow-2xs font-bold'
+                  : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-white'
               }`}
             >
               Months
             </button>
             <button
               onClick={() => setTimeScale('weeks')}
-              className={`px-2.5 py-1 text-xs font-semibold rounded-md transition-colors flex items-center gap-1 ${
+              className={`px-2.5 py-1 text-xs font-semibold rounded-lg transition-colors flex items-center gap-1 ${
                 timeScale === 'weeks'
-                  ? 'bg-white text-stone-900 shadow-xs'
-                  : 'text-stone-500 hover:text-stone-800'
+                  ? 'bg-white dark:bg-stone-900 text-stone-900 dark:text-white shadow-2xs font-bold'
+                  : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-white'
               }`}
             >
               <Calendar className="w-3 h-3" />
@@ -303,33 +303,33 @@ export const InteractiveGrowthChart: React.FC<InteractiveGrowthChartProps> = ({
             </button>
           </div>
 
-          <div className="inline-flex p-1 bg-stone-100 rounded-lg">
+          <div className="inline-flex p-1 bg-stone-100 dark:bg-stone-800 rounded-xl border border-stone-200/60 dark:border-stone-700/60">
             <button
               onClick={() => setMetric('weight')}
-              className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${
+              className={`px-3 py-1 text-xs font-semibold rounded-lg transition-colors ${
                 metric === 'weight'
-                  ? 'bg-white text-stone-900 shadow-xs'
-                  : 'text-stone-600 hover:text-stone-900'
+                  ? 'bg-white dark:bg-stone-900 text-stone-900 dark:text-white shadow-2xs font-bold'
+                  : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-white'
               }`}
             >
               Weight
             </button>
             <button
               onClick={() => setMetric('length')}
-              className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${
+              className={`px-3 py-1 text-xs font-semibold rounded-lg transition-colors ${
                 metric === 'length'
-                  ? 'bg-white text-stone-900 shadow-xs'
-                  : 'text-stone-600 hover:text-stone-900'
+                  ? 'bg-white dark:bg-stone-900 text-stone-900 dark:text-white shadow-2xs font-bold'
+                  : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-white'
               }`}
             >
               Length / Height
             </button>
             <button
               onClick={() => setMetric('headCircumference')}
-              className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${
+              className={`px-3 py-1 text-xs font-semibold rounded-lg transition-colors ${
                 metric === 'headCircumference'
-                  ? 'bg-white text-stone-900 shadow-xs'
-                  : 'text-stone-600 hover:text-stone-900'
+                  ? 'bg-white dark:bg-stone-900 text-stone-900 dark:text-white shadow-2xs font-bold'
+                  : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-white'
               }`}
             >
               Head Circ.
@@ -337,33 +337,33 @@ export const InteractiveGrowthChart: React.FC<InteractiveGrowthChartProps> = ({
           </div>
 
           {/* Age range filter */}
-          <div className="inline-flex p-1 bg-stone-100 rounded-lg">
+          <div className="inline-flex p-1 bg-stone-100 dark:bg-stone-800 rounded-xl border border-stone-200/60 dark:border-stone-700/60">
             <button
               onClick={() => setMaxAgeBracket(12)}
-              className={`px-2.5 py-1.5 text-xs font-medium rounded-md transition-colors ${
+              className={`px-2.5 py-1 text-xs font-semibold rounded-lg transition-colors ${
                 maxAgeBracket === 12
-                  ? 'bg-white text-stone-900 shadow-xs'
-                  : 'text-stone-600 hover:text-stone-900'
+                  ? 'bg-white dark:bg-stone-900 text-stone-900 dark:text-white shadow-2xs font-bold'
+                  : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-white'
               }`}
             >
               1 Year
             </button>
             <button
               onClick={() => setMaxAgeBracket(24)}
-              className={`px-2.5 py-1.5 text-xs font-medium rounded-md transition-colors ${
+              className={`px-2.5 py-1 text-xs font-semibold rounded-lg transition-colors ${
                 maxAgeBracket === 24
-                  ? 'bg-white text-stone-900 shadow-xs'
-                  : 'text-stone-600 hover:text-stone-900'
+                  ? 'bg-white dark:bg-stone-900 text-stone-900 dark:text-white shadow-2xs font-bold'
+                  : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-white'
               }`}
             >
               2 Years
             </button>
             <button
               onClick={() => setMaxAgeBracket(36)}
-              className={`px-2.5 py-1.5 text-xs font-medium rounded-md transition-colors ${
+              className={`px-2.5 py-1 text-xs font-semibold rounded-lg transition-colors ${
                 maxAgeBracket === 36
-                  ? 'bg-white text-stone-900 shadow-xs'
-                  : 'text-stone-600 hover:text-stone-900'
+                  ? 'bg-white dark:bg-stone-900 text-stone-900 dark:text-white shadow-2xs font-bold'
+                  : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-white'
               }`}
             >
               3 Years
@@ -374,10 +374,10 @@ export const InteractiveGrowthChart: React.FC<InteractiveGrowthChartProps> = ({
           <button
             onClick={() => setShowBands(!showBands)}
             title="Toggle percentile zones"
-            className={`p-1.5 text-xs rounded-lg border flex items-center gap-1.5 transition-colors ${
+            className={`p-1.5 text-xs rounded-xl border flex items-center gap-1.5 transition-colors cursor-pointer shadow-2xs ${
               showBands
-                ? 'bg-stone-50 border-stone-300 text-stone-700'
-                : 'bg-white border-stone-200 text-stone-400'
+                ? 'bg-emerald-50 dark:bg-emerald-950/60 border-emerald-300 dark:border-emerald-800 text-emerald-900 dark:text-emerald-300 font-semibold'
+                : 'bg-white dark:bg-stone-900 border-stone-200 dark:border-stone-700 text-stone-400 dark:text-stone-500 hover:text-stone-700 dark:hover:text-stone-300'
             }`}
           >
             <Sliders className="w-3.5 h-3.5" />
@@ -417,21 +417,21 @@ export const InteractiveGrowthChart: React.FC<InteractiveGrowthChartProps> = ({
           )}
         </div>
       ) : latest ? (
-        <div className="mt-3 py-2 px-3 bg-stone-50 rounded-lg flex flex-wrap items-center justify-between text-xs text-stone-700 gap-2 border border-stone-200/60">
-          <div className="flex items-center gap-2">
-            <span className="font-semibold text-stone-900">Latest Recorded:</span>
-            <span>{displayValue(latest.val)}</span>
-            <span aria-hidden="true" className="text-stone-400">·</span>
+        <div className="mt-3 py-2.5 px-3.5 bg-stone-50 dark:bg-stone-800/60 rounded-xl flex flex-wrap items-center justify-between text-xs text-stone-700 dark:text-stone-300 gap-2 border border-stone-200/60 dark:border-stone-700/60 transition-colors">
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="font-bold text-stone-900 dark:text-white">Latest Recorded:</span>
+            <span className="font-mono font-bold text-stone-900 dark:text-white">{displayValue(latest.val)}</span>
+            <span aria-hidden="true" className="text-stone-300 dark:text-stone-600">·</span>
             <span>Age: {latest.ageInMonths} mo</span>
-            <span aria-hidden="true" className="text-stone-400">·</span>
+            <span aria-hidden="true" className="text-stone-300 dark:text-stone-600">·</span>
             <span>Date: {latest.date}</span>
           </div>
           <div className="flex items-center gap-3">
-            <span className="inline-flex items-center gap-1 font-semibold text-emerald-800">
+            <span className="inline-flex items-center gap-1 font-bold text-emerald-800 dark:text-emerald-400">
               <TrendingUp className="w-3.5 h-3.5" />
               {latest.percentile}th Percentile
             </span>
-            <span className="text-stone-500">Z-score: {latest.zScore > 0 ? `+${latest.zScore}` : latest.zScore}</span>
+            <span className="text-stone-500 dark:text-stone-400 font-mono">Z-score: {latest.zScore > 0 ? `+${latest.zScore}` : latest.zScore}</span>
           </div>
         </div>
       ) : null}
@@ -835,28 +835,28 @@ export const InteractiveGrowthChart: React.FC<InteractiveGrowthChartProps> = ({
       </div>
 
       {/* Legend & Guide footer */}
-      <div className="mt-4 pt-3 border-t border-stone-100 flex flex-wrap items-center justify-between text-xs text-stone-500 gap-y-2">
+      <div className="mt-4 pt-3.5 border-t border-stone-100 dark:border-stone-800 flex flex-wrap items-center justify-between text-xs text-stone-500 dark:text-stone-400 gap-y-2">
         <div className="flex flex-wrap items-center gap-4">
           <div className="flex items-center gap-1.5">
-            <span className="w-3 h-0.5 bg-teal-700 rounded-full"></span>
-            <span className="w-2 h-2 rounded-full bg-teal-700 border border-white"></span>
-            <span className="text-stone-700 font-medium">{profile.name}</span>
+            <span className="w-3 h-0.5 bg-teal-600 dark:bg-teal-400 rounded-full"></span>
+            <span className="w-2 h-2 rounded-full bg-teal-600 dark:bg-teal-400 border border-white dark:border-stone-900"></span>
+            <span className="text-stone-700 dark:text-stone-200 font-semibold">{profile.name}</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <span className="w-3 h-0.5 bg-emerald-700"></span>
-            <span>WHO 50th % (Median)</span>
+            <span className="w-3 h-0.5 bg-emerald-600 dark:bg-emerald-400 rounded-full"></span>
+            <span className="text-stone-600 dark:text-stone-300">WHO 50th % (Median)</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <span className="w-3 h-2 bg-emerald-100 rounded-xs"></span>
-            <span>15th – 85th % (Typical)</span>
+            <span className="w-3 h-2 bg-emerald-100 dark:bg-emerald-950/80 rounded-xs border border-emerald-200/60 dark:border-emerald-800/60"></span>
+            <span className="text-stone-600 dark:text-stone-300">15th – 85th % (Typical)</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <span className="w-3 h-2 bg-stone-100 rounded-xs border border-stone-200"></span>
-            <span>3rd – 97th %</span>
+            <span className="w-3 h-2 bg-stone-100 dark:bg-stone-800 rounded-xs border border-stone-200 dark:border-stone-700"></span>
+            <span className="text-stone-600 dark:text-stone-300">3rd – 97th %</span>
           </div>
         </div>
 
-        <div className="flex items-center gap-1 text-[11px] text-stone-400">
+        <div className="flex items-center gap-1 text-[11px] text-stone-400 dark:text-stone-500">
           <Info className="w-3.5 h-3.5" />
           <span>Tap any data point for exact percentile</span>
         </div>
