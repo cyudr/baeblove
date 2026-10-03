@@ -20,11 +20,16 @@ export const PasswordGate: React.FC<PasswordGateProps> = ({ onAuthenticated }) =
 
     const isValid = validatePassword(password);
     if (isValid) {
-      confetti({ particleCount: 60, spread: 70, origin: { y: 0.6 } });
+      try {
+        confetti({ particleCount: 50, spread: 60, origin: { y: 0.6 } });
+      } catch (err) {
+        // Confetti is purely decorative; ignore errors if canvas unavailable
+        console.warn('Canvas confetti error:', err);
+      }
       authenticateUser();
       setTimeout(() => {
         onAuthenticated();
-      }, 350);
+      }, 180);
     } else {
       setIsSubmitting(false);
       setError('Incorrect access password. Please check your credentials.');

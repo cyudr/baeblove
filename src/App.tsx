@@ -27,10 +27,12 @@ import {
   logoutUser,
 } from './utils/authConfig';
 
-function AppContent() {
-  const isProtected = isPasswordProtectionEnabled();
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => isUserAuthenticated());
+interface AppContentProps {
+  isPasswordProtected: boolean;
+  onLockPortal: () => void;
+}
 
+function AppContent({ isPasswordProtected, onLockPortal }: AppContentProps) {
   const {
     activeProfile,
     activeBabyMeasurements,
@@ -46,16 +48,6 @@ function AppContent() {
   const [isLoveNoteModalOpen, setIsLoveNoteModalOpen] = useState(false);
   const [isFormulaModalOpen, setIsFormulaModalOpen] = useState(false);
   const [loveNoteStageLabel, setLoveNoteStageLabel] = useState('Today');
-
-  // If password protection is enabled and user is not yet unlocked, render access gate
-  if (isProtected && !isAuthenticated) {
-    return <PasswordGate onAuthenticated={() => setIsAuthenticated(true)} />;
-  }
-
-  const handleLockPortal = () => {
-    logoutUser();
-    setIsAuthenticated(false);
-  };
 
   // Auto-toggle tabs when profile switches between baby and fetal
   React.useEffect(() => {
@@ -83,8 +75,8 @@ function AppContent() {
         onOpenProfileModal={() => setIsProfileModalOpen(true)}
         onOpenExportModal={() => setIsExportModalOpen(true)}
         onOpenFormulaModal={() => setIsFormulaModalOpen(true)}
-        isPasswordProtected={isProtected}
-        onLockPortal={handleLockPortal}
+        isPasswordProtected={isPasswordProtected}
+        onLockPortal={onLockPortal}
       />
 
       {/* Main Content Area - naturally scrollable for overview and all tabs */}
@@ -210,9 +202,28 @@ function AppContent() {
 }
 
 export default function App() {
+  const isProtected = isPasswordProtectionEnabled();
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => isUserAuthenticated());
+
+  const handleAuthenticated = () => {
+    setIsAuthenticated(true);
+  };
+
+  const handleLockPortal = () => {
+    logoutUser();
+    setIsAuthenticated(false);
+  };
+
+  if (isProtected && !isAuthenticated) {
+    return <PasswordGate onAuthenticated={handleAuthenticated} />;
+  }
+
   return (
     <AppProvider>
-      <AppContent />
+      <AppContent
+        isPasswordProtected={isProtected}
+        onLockPortal={handleLockPortal}
+      />
     </AppProvider>
   );
 }
