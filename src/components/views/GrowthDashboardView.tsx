@@ -60,11 +60,14 @@ import {
   Quote,
   Flame,
   Utensils,
+  History,
 } from 'lucide-react';
 import {
   CardDetailPopupModal,
   PopupCardType,
 } from '../modals/CardDetailPopupModal';
+import { GraduateFetalModal } from '../modals/GraduateFetalModal';
+import { AttachedPrenatalHistoryModal } from '../modals/AttachedPrenatalHistoryModal';
 import {
   BABY_RECIPES,
   FETAL_MATERNAL_RECIPES,
@@ -122,6 +125,9 @@ export const GrowthDashboardView: React.FC<GrowthDashboardViewProps> = ({
   const [babyStageMode, setBabyStageMode] = useState<'weeks' | 'months'>('weeks');
   const [previewWeekNum, setPreviewWeekNum] = useState<number>(38);
   const [previewFetalWeekNum, setPreviewFetalWeekNum] = useState<number>(28);
+
+  const [isGraduateModalOpen, setIsGraduateModalOpen] = useState(false);
+  const [isHistoryModalOpen, setIsHistoryModalOpen] = useState(false);
 
   // Kick session live timer for fetal
   const [isTimerActive, setIsTimerActive] = useState(false);
@@ -428,12 +434,12 @@ export const GrowthDashboardView: React.FC<GrowthDashboardViewProps> = ({
               </div>
 
               {/* Action Cluster */}
-              <div className="flex items-center gap-2.5 self-start md:self-auto shrink-0">
+              <div className="flex items-center gap-2.5 self-start md:self-auto shrink-0 flex-wrap">
                 {onOpenFormulaModal && (
                   <button
                     onClick={onOpenFormulaModal}
                     title="View mathematical formulas and sources"
-                    className="px-3.5 py-2 text-xs font-semibold rounded-2xl border border-stone-200 dark:border-stone-700 bg-white/95 dark:bg-stone-800 hover:bg-stone-50 dark:hover:bg-stone-700 text-stone-700 dark:text-stone-200 transition-all flex items-center gap-1.5 shadow-2xs hover:scale-[1.02] active:scale-[0.98]"
+                    className="px-3.5 py-2 text-xs font-semibold rounded-2xl border border-stone-200 dark:border-stone-700 bg-white/95 dark:bg-stone-800 hover:bg-stone-50 dark:hover:bg-stone-700 text-stone-700 dark:text-stone-200 transition-all flex items-center gap-1.5 shadow-2xs hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
                   >
                     <BookOpen className="w-3.5 h-3.5 text-amber-700 dark:text-amber-400" />
                     <span className="font-bold text-amber-900 dark:text-amber-300 uppercase">
@@ -442,9 +448,31 @@ export const GrowthDashboardView: React.FC<GrowthDashboardViewProps> = ({
                   </button>
                 )}
 
+                {!isBaby && (
+                  <button
+                    onClick={() => setIsGraduateModalOpen(true)}
+                    title="Celebrate baby birth and transition to baby profile"
+                    className="px-3.5 py-2 text-xs font-bold rounded-2xl bg-linear-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white transition-all flex items-center gap-1.5 shadow-sm hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
+                  >
+                    <Baby className="w-4 h-4" />
+                    <span>Graduate to Baby</span>
+                  </button>
+                )}
+
+                {isBaby && activeProfile.attachedFetalProfileId && (
+                  <button
+                    onClick={() => setIsHistoryModalOpen(true)}
+                    title="Explore attached in-womb ultrasounds, kick logs, and prenatal notes"
+                    className="px-3.5 py-2 text-xs font-bold rounded-2xl bg-amber-100 hover:bg-amber-200 dark:bg-amber-950/80 dark:hover:bg-amber-900 border border-amber-300 dark:border-amber-800 text-amber-900 dark:text-amber-200 transition-all flex items-center gap-1.5 shadow-2xs hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
+                  >
+                    <History className="w-4 h-4 text-amber-700 dark:text-amber-400" />
+                    <span>In-Womb Journey</span>
+                  </button>
+                )}
+
                 <button
                   onClick={onOpenLogModal}
-                  className="px-4 py-2 text-xs font-bold rounded-2xl bg-stone-900 hover:bg-stone-800 dark:bg-stone-100 dark:hover:bg-white text-white dark:text-stone-900 transition-all flex items-center gap-1.5 shadow-sm hover:scale-[1.02] active:scale-[0.98]"
+                  className="px-4 py-2 text-xs font-bold rounded-2xl bg-stone-900 hover:bg-stone-800 dark:bg-stone-100 dark:hover:bg-white text-white dark:text-stone-900 transition-all flex items-center gap-1.5 shadow-sm hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
                 >
                   <Plus className="w-4 h-4" />
                   <span>{isBaby ? 'Log Pediatric Visit' : 'Log Ultrasound'}</span>
@@ -452,6 +480,37 @@ export const GrowthDashboardView: React.FC<GrowthDashboardViewProps> = ({
               </div>
             </div>
           </div>
+
+          {/* Attached In-Womb Journey Highlight Banner (Requirement 3) */}
+          {isBaby && activeProfile.attachedFetalProfileId && (
+            <div className="p-3.5 sm:p-4 rounded-3xl bg-amber-50/80 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900/50 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-2xs">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-2xl bg-amber-100 dark:bg-amber-900/60 text-amber-800 dark:text-amber-300 flex items-center justify-center shrink-0">
+                  <History className="w-5 h-5" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-bold text-stone-900 dark:text-white">
+                      Attached In-Womb Journey
+                    </span>
+                    <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-amber-200/70 dark:bg-amber-900/80 text-amber-900 dark:text-amber-200">
+                      {activeProfile.prenatalSnapshot?.fetalName ? `"${activeProfile.prenatalSnapshot.fetalName}"` : 'Preserved'}
+                    </span>
+                  </div>
+                  <div className="text-[11px] text-stone-600 dark:text-stone-400 mt-0.5">
+                    Ultrasound biometrics, kick counting sessions, and pregnancy love letters are permanently linked to {activeProfile.name}.
+                  </div>
+                </div>
+              </div>
+              <button
+                onClick={() => setIsHistoryModalOpen(true)}
+                className="px-3.5 py-1.5 text-xs font-bold text-stone-800 dark:text-stone-200 bg-white dark:bg-stone-800 hover:bg-stone-100 dark:hover:bg-stone-700 border border-amber-300 dark:border-amber-800 rounded-xl transition-all shadow-2xs flex items-center gap-1.5 self-start sm:self-auto cursor-pointer"
+              >
+                <span>Explore In-Womb Records</span>
+                <ArrowRight className="w-3.5 h-3.5 text-amber-700 dark:text-amber-400" />
+              </button>
+            </div>
+          )}
 
           {/* ============================================================== */}
           {/* ASYMMETRIC BENTO GRID OF CORE VITALS                          */}
@@ -1716,6 +1775,27 @@ export const GrowthDashboardView: React.FC<GrowthDashboardViewProps> = ({
           ...customPointerData,
         }}
       />
+
+      {/* Graduate Fetal Modal */}
+      {!isBaby && activeProfile && (
+        <GraduateFetalModal
+          isOpen={isGraduateModalOpen}
+          onClose={() => setIsGraduateModalOpen(false)}
+          fetalProfile={activeProfile}
+          onGraduated={() => {
+            setIsGraduateModalOpen(false);
+          }}
+        />
+      )}
+
+      {/* Attached Prenatal History Review Modal */}
+      {isBaby && activeProfile && (
+        <AttachedPrenatalHistoryModal
+          isOpen={isHistoryModalOpen}
+          onClose={() => setIsHistoryModalOpen(false)}
+          babyProfile={activeProfile}
+        />
+      )}
     </>
   );
 };

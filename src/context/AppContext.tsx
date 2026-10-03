@@ -1,6 +1,8 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import {
   ChildProfile,
+  Gender,
+  PrenatalSnapshot,
   BabyMeasurement,
   FetalMeasurement,
   CompletedMilestone,
@@ -32,6 +34,21 @@ interface AppContextType {
   addProfile: (profile: Omit<ChildProfile, 'id'>) => string;
   updateProfile: (id: string, updates: Partial<ChildProfile>) => void;
   deleteProfile: (id: string) => void;
+  progressFetusToBaby: (params: {
+    fetalProfileId: string;
+    babyName: string;
+    gender: Gender;
+    birthDate: string;
+    birthWeightKg?: number;
+    birthLengthCm?: number;
+    birthHeadCircumferenceCm?: number;
+    notes?: string;
+    attachFetalHistory: boolean;
+  }) => string;
+  getAttachedFetalProfile: (babyProfileId: string) => ChildProfile | undefined;
+  getAttachedFetalMeasurements: (babyProfileId: string) => FetalMeasurement[];
+  getAttachedKickSessions: (babyProfileId: string) => KickSession[];
+  getAttachedFetalLoveNotes: (babyProfileId: string) => LoveNote[];
 
   theme: ThemeMode;
   setTheme: (theme: ThemeMode) => void;
@@ -574,12 +591,160 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const deleteProfile = (id: string) => {
     setProfiles((prev) => {
-      const remaining = prev.filter((p) => p.id !== id);
-      if (activeProfileId === id && remaining.length > 0) {
+      let remaining = prev.filter((p) => p.id !== id);
+      if (remaining.length === 0) {
+        // If all profiles were deleted, provide a fresh starter profile
+        const freshProfile: ChildProfile = {
+          id: `profile-${Date.now()}`,
+          name: 'My Baby',
+          type: 'baby',
+          gender: 'undisclosed',
+          dateOfEvent: new Date().toISOString().split('T')[0],
+          avatarColor: 'bg-emerald-600',
+          avatarIcon: 'Baby',
+          notes: 'New profile created.',
+        };
+        remaining = [freshProfile];
+      }
+      if (activeProfileId === id) {
         setActiveProfileId(remaining[0].id);
       }
       return remaining;
     });
+
+    // Clean up stored records associated with this profile
+    setBabyMeasurements((prev) => prev.filter((m) => m.profileId !== id));
+    setFetalMeasurements((prev) => prev.filter((m) => m.profileId !== id));
+    setCompletedMilestones((prev) => prev.filter((m) => m.profileId !== id));
+    setKickSessions((prev) => prev.filter((k) => k.profileId !== id));
+    setLoveNotes((prev) => prev.filter((n) => n.profileId !== id));
+  };
+
+  const progressFetusToBaby = (params: {
+    fetalProfileId: string;
+    babyName: string;
+    gender: Gender;
+    birthDate: string;
+    birthWeightKg?: number;
+    birthLengthCm?: number;
+    birthHeadCircumferenceCm?: number;
+    notes?: string;
+    attachFetalHistory: boolean;
+  }): string => {
+    const fetus = profiles.find((p) => p.id === params.fetalProfileId);
+    const newBabyId = `baby-${Date.now()}`;
+
+    // Compute prenatal snapshot from fetal measurements & kicks
+    const fMeasurements = fetalMeasurements.filter((m) => m.profileId === params.fetalProfileId);
+    const fKicks = kickSessions.filter((k) => k.profileId === params.fetalProfileId);
+    const lastScan = fMeasurements.length > 0 ? fMeasurements[fMeasurements.length - 1] : undefined;
+    const totalKicksLogged = fKicks.reduce((acc, k) => acc + (k.kicksCount || 0), 0);
+
+    const snapshot = params.attachFetalHistory && fetus ? {
+      fetalProfileId: fetus.id,
+      fetalName: fetus.name,
+      dueDate: fetus.dateOfEvent,
+      totalUltrasoundScans: fMeasurements.length,
+      totalKickSessions: fKicks.length,
+      totalKicksLogged,
+      lastGestationalWeeks: lastScan?.gestationalWeeks,
+      lastGestationalDays: lastScan?.gestationalDays,
+      lastEfwGrams: lastScan?.efwGrams,
+      scanLocation: lastScan?.scanLocation,
+      notes: fetus.notes,
+    } : undefined;
+
+    const newBaby: ChildProfile = {
+      id: newBabyId,
+      name: params.babyName.trim(),
+      type: 'baby',
+      gender: params.gender,
+      dateOfEvent: params.birthDate,
+      birthWeightKg: params.birthWeightKg,
+      birthLengthCm: params.birthLengthCm,
+      birthHeadCircumferenceCm: params.birthHeadCircumferenceCm,
+      notes: params.notes?.trim() || undefined,
+      avatarColor: params.gender === 'girl' ? 'bg-rose-600' : 'bg-emerald-600',
+      avatarIcon: 'Baby',
+      attachedFetalProfileId: params.attachFetalHistory ? params.fetalProfileId : undefined,
+      prenatalSnapshot: snapshot,
+    };
+
+    // Update profiles: add new baby, and if attached, update fetus with attachedToBabyId & isArchivedFetus
+    setProfiles((prev) => {
+      const updatedPrev = prev.map((p) => {
+        if (p.id === params.fetalProfileId && params.attachFetalHistory) {
+          return {
+            ...p,
+            attachedToBabyId: newBabyId,
+            isArchivedFetus: true,
+            graduatedAt: new Date().toISOString(),
+          };
+        }
+        return p;
+      });
+      return [...updatedPrev, newBaby];
+    });
+
+    // Add baseline newborn measurement if values provided
+    if (params.birthWeightKg || params.birthLengthCm || params.birthHeadCircumferenceCm) {
+      const birthMeasurement: BabyMeasurement = {
+        id: `bm-${Date.now()}`,
+        profileId: newBabyId,
+        date: params.birthDate,
+        ageInMonths: 0,
+        ageInWeeks: 0,
+        weightKg: params.birthWeightKg,
+        lengthCm: params.birthLengthCm,
+        headCircumferenceCm: params.birthHeadCircumferenceCm,
+        pediatricianVisit: true,
+        notes: 'Birth checkup recorded upon delivery',
+      };
+      setBabyMeasurements((prev) => [...prev, birthMeasurement]);
+    }
+
+    // Add welcome love note
+    const welcomeNote: LoveNote = {
+      id: `note-${Date.now()}`,
+      profileId: newBabyId,
+      date: params.birthDate,
+      stageLabel: 'Birth Day 🎉',
+      author: 'Family',
+      emoji: '🌟',
+      content: `Welcome to the world, precious ${params.babyName.trim()}! You arrived safely on ${params.birthDate}, filling all our hearts with boundless love and joy.`,
+    };
+    setLoveNotes((prev) => [...prev, welcomeNote]);
+
+    // Set active profile to the newborn baby
+    setActiveProfileId(newBabyId);
+
+    return newBabyId;
+  };
+
+  const getAttachedFetalProfile = (babyProfileId: string): ChildProfile | undefined => {
+    const baby = profiles.find((p) => p.id === babyProfileId);
+    if (!baby?.attachedFetalProfileId) return undefined;
+    return profiles.find((p) => p.id === baby.attachedFetalProfileId);
+  };
+
+  const getAttachedFetalMeasurements = (babyProfileId: string): FetalMeasurement[] => {
+    const baby = profiles.find((p) => p.id === babyProfileId);
+    if (!baby?.attachedFetalProfileId) return [];
+    return fetalMeasurements
+      .filter((m) => m.profileId === baby.attachedFetalProfileId)
+      .sort((a, b) => (a.gestationalWeeks * 7 + a.gestationalDays) - (b.gestationalWeeks * 7 + b.gestationalDays));
+  };
+
+  const getAttachedKickSessions = (babyProfileId: string): KickSession[] => {
+    const baby = profiles.find((p) => p.id === babyProfileId);
+    if (!baby?.attachedFetalProfileId) return [];
+    return kickSessions.filter((k) => k.profileId === baby.attachedFetalProfileId);
+  };
+
+  const getAttachedFetalLoveNotes = (babyProfileId: string): LoveNote[] => {
+    const baby = profiles.find((p) => p.id === babyProfileId);
+    if (!baby?.attachedFetalProfileId) return [];
+    return loveNotes.filter((n) => n.profileId === baby.attachedFetalProfileId);
   };
 
   const addBabyMeasurement = (measurement: Omit<BabyMeasurement, 'id' | 'profileId'>) => {
@@ -741,6 +906,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         addProfile,
         updateProfile,
         deleteProfile,
+        progressFetusToBaby,
+        getAttachedFetalProfile,
+        getAttachedFetalMeasurements,
+        getAttachedKickSessions,
+        getAttachedFetalLoveNotes,
         theme,
         setTheme,
         toggleTheme,

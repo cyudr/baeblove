@@ -26,12 +26,14 @@ import {
   BookOpen,
   Sliders,
   ShieldCheck,
+  Baby,
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import {
   CardDetailPopupModal,
   PopupCardType,
 } from '../modals/CardDetailPopupModal';
+import { GraduateFetalModal } from '../modals/GraduateFetalModal';
 
 interface FetalHubViewProps {
   onOpenLogModal: () => void;
@@ -74,6 +76,7 @@ export const FetalHubView: React.FC<FetalHubViewProps> = ({
   // Popup modal state for pointer details
   const [popupType, setPopupType] = useState<PopupCardType | null>(null);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [isGraduateModalOpen, setIsGraduateModalOpen] = useState(false);
 
   const openPopup = (type: PopupCardType) => {
     setPopupType(type);
@@ -166,7 +169,7 @@ export const FetalHubView: React.FC<FetalHubViewProps> = ({
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
             {onOpenFormulaModal && (
               <button
                 onClick={onOpenFormulaModal}
@@ -177,6 +180,13 @@ export const FetalHubView: React.FC<FetalHubViewProps> = ({
                 <span>Formula: {formulaSettings.fetalEfwFormula.toUpperCase()}</span>
               </button>
             )}
+            <button
+              onClick={() => setIsGraduateModalOpen(true)}
+              className="px-3.5 py-2 text-xs font-bold text-white bg-linear-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 rounded-xl shadow-xs transition-all flex items-center gap-1.5 shrink-0 cursor-pointer"
+            >
+              <Baby className="w-3.5 h-3.5" />
+              <span>Graduate to Baby</span>
+            </button>
             <button
               onClick={onOpenLogModal}
               className="px-4 py-2 text-xs font-semibold text-white bg-stone-900 hover:bg-stone-800 dark:bg-stone-100 dark:hover:bg-white dark:text-stone-900 rounded-xl shadow-xs transition-colors shrink-0"
@@ -562,6 +572,18 @@ export const FetalHubView: React.FC<FetalHubViewProps> = ({
           kicksCount: kickCount,
         }}
       />
+
+      {/* Graduate Fetal Modal */}
+      {activeProfile && (
+        <GraduateFetalModal
+          isOpen={isGraduateModalOpen}
+          onClose={() => setIsGraduateModalOpen(false)}
+          fetalProfile={activeProfile}
+          onGraduated={() => {
+            setIsGraduateModalOpen(false);
+          }}
+        />
+      )}
     </div>
   );
 };

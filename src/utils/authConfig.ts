@@ -124,3 +124,30 @@ export function logoutUser(): void {
     localStorage.removeItem(AUTH_COOKIE_NAME);
   } catch {}
 }
+
+/**
+ * Validates security passkey specifically for destructive profile deletion.
+ * If bae_Key password protection is configured, requires entering the valid password.
+ * If no environment passwords are configured, requires typing the confirmation keyword "DELETE".
+ */
+export function verifyDeletionPassword(attempt: string): { isValid: boolean; error?: string } {
+  const clean = attempt.trim();
+  if (!clean) {
+    return { isValid: false, error: 'Password or confirmation code is required.' };
+  }
+
+  const validPasswords = getConfiguredPasswords();
+  if (validPasswords.length > 0) {
+    if (validPasswords.includes(clean)) {
+      return { isValid: true };
+    }
+    return { isValid: false, error: 'Incorrect security password. Please re-enter the authorized passkey.' };
+  }
+
+  // Fallback when no bae_Key passwords are set in env
+  if (clean.toUpperCase() === 'DELETE' || clean.toLowerCase() === 'confirm') {
+    return { isValid: true };
+  }
+
+  return { isValid: false, error: 'Please enter "DELETE" to confirm permanent deletion.' };
+}

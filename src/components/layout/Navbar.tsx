@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
+import { ChildProfile } from '../../types';
 import {
   Baby,
   HeartPulse,
@@ -17,7 +18,11 @@ import {
   LayoutDashboard,
   LineChart,
   History,
+  Trash2,
 } from 'lucide-react';
+import { DeleteProfileModal } from '../modals/DeleteProfileModal';
+import { GraduateFetalModal } from '../modals/GraduateFetalModal';
+import { AttachedPrenatalHistoryModal } from '../modals/AttachedPrenatalHistoryModal';
 
 interface NavbarProps {
   activeTab: string;
@@ -53,6 +58,10 @@ export const Navbar: React.FC<NavbarProps> = ({
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const [toolsDropdownOpen, setToolsDropdownOpen] = useState(false);
 
+  const [profileToDelete, setProfileToDelete] = useState<ChildProfile | null>(null);
+  const [fetalProfileToGraduate, setFetalProfileToGraduate] = useState<ChildProfile | null>(null);
+  const [babyProfileForHistory, setBabyProfileForHistory] = useState<ChildProfile | null>(null);
+
   const navItems = [
     { id: 'dashboard', label: 'Overview', icon: LayoutDashboard },
     {
@@ -70,7 +79,8 @@ export const Navbar: React.FC<NavbarProps> = ({
   ];
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-40 w-full h-14 bg-white/92 dark:bg-stone-900/92 backdrop-blur-md border-b border-stone-200/80 dark:border-stone-800/80 shadow-xs transition-colors">
+    <>
+      <header className="fixed top-0 left-0 right-0 z-40 w-full h-14 bg-white/92 dark:bg-stone-900/92 backdrop-blur-md border-b border-stone-200/80 dark:border-stone-800/80 shadow-xs transition-colors">
       <div className="max-w-7xl mx-auto h-full px-3 sm:px-5 lg:px-8 flex items-center justify-between gap-2">
         {/* Left: Brand & Compact Profile Pill */}
         <div className="flex items-center gap-2 sm:gap-3 shrink-0">
@@ -120,32 +130,86 @@ export const Navbar: React.FC<NavbarProps> = ({
                   {profiles.map((p) => {
                     const isActive = p.id === activeProfileId;
                     return (
-                      <button
+                      <div
                         key={p.id}
-                        onClick={() => {
-                          setActiveProfileId(p.id);
-                          setProfileDropdownOpen(false);
-                        }}
-                        className={`w-full px-3.5 py-2 text-left text-xs flex items-center justify-between hover:bg-stone-50 dark:hover:bg-stone-700/60 transition-colors ${
+                        className={`w-full px-3.5 py-1.5 flex items-center justify-between hover:bg-stone-50 dark:hover:bg-stone-750 transition-colors ${
                           isActive
                             ? 'font-bold text-stone-900 dark:text-white bg-emerald-50/60 dark:bg-emerald-950/40'
                             : 'text-stone-600 dark:text-stone-300'
                         }`}
                       >
-                        <div className="flex items-center gap-2 truncate">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setActiveProfileId(p.id);
+                            setProfileDropdownOpen(false);
+                          }}
+                          className="flex items-center gap-2 truncate text-left flex-1 cursor-pointer py-1"
+                        >
                           {p.type === 'baby' ? (
                             <Baby className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
                           ) : (
                             <HeartPulse className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0" />
                           )}
-                          <span className="truncate">{p.name}</span>
+                          <div className="truncate">
+                            <div className="text-xs truncate">{p.name}</div>
+                            <div className="text-[10px] text-stone-400 dark:text-stone-500 font-normal">
+                              {p.type === 'baby' ? 'Baby' : 'Pregnancy'} {p.attachedFetalProfileId ? '· Attached In-Womb' : ''}
+                            </div>
+                          </div>
+                        </button>
+
+                        <div className="flex items-center gap-1 shrink-0">
+                          {isActive && (
+                            <Check className="w-4 h-4 text-emerald-600 dark:text-emerald-400 mr-1" />
+                          )}
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setProfileDropdownOpen(false);
+                              setProfileToDelete(p);
+                            }}
+                            className="p-1 rounded-lg text-stone-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/60 transition-colors cursor-pointer"
+                            title={`Delete profile: ${p.name}`}
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
                         </div>
-                        {isActive && (
-                          <Check className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
-                        )}
-                      </button>
+                      </div>
                     );
                   })}
+
+                  {/* Special Contextual Profile Actions */}
+                  {activeProfile && (
+                    <div className="px-2 pt-1 border-t border-stone-100 dark:border-stone-700 my-1 space-y-1">
+                      {activeProfile.type === 'fetal' && (
+                        <button
+                          onClick={() => {
+                            setProfileDropdownOpen(false);
+                            setFetalProfileToGraduate(activeProfile);
+                          }}
+                          className="w-full px-2.5 py-1.5 rounded-xl bg-linear-to-r from-emerald-500/15 to-teal-500/15 border border-emerald-300 dark:border-emerald-800 text-left text-xs font-bold text-emerald-950 dark:text-emerald-200 flex items-center gap-2 hover:bg-emerald-50 dark:hover:bg-emerald-950/60 transition-colors cursor-pointer"
+                        >
+                          <Sparkles className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                          <span>Celebrate Birth & Graduate to Baby</span>
+                        </button>
+                      )}
+
+                      {activeProfile.type === 'baby' && activeProfile.attachedFetalProfileId && (
+                        <button
+                          onClick={() => {
+                            setProfileDropdownOpen(false);
+                            setBabyProfileForHistory(activeProfile);
+                          }}
+                          className="w-full px-2.5 py-1.5 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 text-left text-xs font-bold text-amber-900 dark:text-amber-200 flex items-center gap-2 hover:bg-amber-100 dark:hover:bg-amber-900/60 transition-colors cursor-pointer"
+                        >
+                          <History className="w-3.5 h-3.5 text-amber-700 dark:text-amber-400 shrink-0" />
+                          <span>Review Attached In-Womb Journey</span>
+                        </button>
+                      )}
+                    </div>
+                  )}
 
                   <div className="border-t border-stone-100 dark:border-stone-700 my-1.5" />
 
@@ -295,5 +359,37 @@ export const Navbar: React.FC<NavbarProps> = ({
         </div>
       </div>
     </header>
+
+    {/* Delete Profile Modal (Requirement 2) */}
+    {profileToDelete && (
+      <DeleteProfileModal
+        isOpen={!!profileToDelete}
+        onClose={() => setProfileToDelete(null)}
+        profileToDelete={profileToDelete}
+      />
+    )}
+
+    {/* Graduate Fetal Modal (Requirement 1 & 3) */}
+    {fetalProfileToGraduate && (
+      <GraduateFetalModal
+        isOpen={!!fetalProfileToGraduate}
+        onClose={() => setFetalProfileToGraduate(null)}
+        fetalProfile={fetalProfileToGraduate}
+        onGraduated={() => {
+          setFetalProfileToGraduate(null);
+          setActiveTab('dashboard');
+        }}
+      />
+    )}
+
+    {/* Attached Prenatal History Review Modal (Requirement 3) */}
+    {babyProfileForHistory && (
+      <AttachedPrenatalHistoryModal
+        isOpen={!!babyProfileForHistory}
+        onClose={() => setBabyProfileForHistory(null)}
+        babyProfile={babyProfileForHistory}
+      />
+    )}
+    </>
   );
 };

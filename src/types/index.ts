@@ -3,6 +3,20 @@ export type Gender = 'boy' | 'girl' | 'undisclosed';
 export type UnitSystem = 'metric' | 'imperial';
 export type ThemeMode = 'light' | 'dark';
 
+export interface PrenatalSnapshot {
+  fetalProfileId: string;
+  fetalName: string;
+  dueDate: string;
+  totalUltrasoundScans: number;
+  totalKickSessions: number;
+  totalKicksLogged: number;
+  lastGestationalWeeks?: number;
+  lastGestationalDays?: number;
+  lastEfwGrams?: number;
+  scanLocation?: string;
+  notes?: string;
+}
+
 export interface ChildProfile {
   id: string;
   name: string;
@@ -18,6 +32,12 @@ export interface ChildProfile {
   notes?: string;
   avatarColor: string;
   avatarIcon: string;
+  // Attached fetal profile linkage
+  attachedFetalProfileId?: string; // Present on baby profiles that graduated from a pregnancy
+  attachedToBabyId?: string;       // Present on fetal profiles that graduated into a baby profile
+  isArchivedFetus?: boolean;       // Set to true when graduated so it acts as an in-womb history archive
+  graduatedAt?: string;            // Timestamp of when graduation occurred
+  prenatalSnapshot?: PrenatalSnapshot; // Quick summary snapshot of the in-womb journey
 }
 
 export interface BabyMeasurement {
