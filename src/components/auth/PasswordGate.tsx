@@ -118,13 +118,10 @@ export const PasswordGate: React.FC<PasswordGateProps> = ({ onAuthenticated }) =
         </form>
 
         {/* Footer Info & Cookie Storage Indicator */}
-        <div className="pt-4 border-t border-stone-100 dark:border-stone-800 text-center space-y-1.5 text-[11px] text-stone-500 dark:text-stone-400">
-          <div className="flex items-center justify-center gap-1.5 text-stone-600 dark:text-stone-300 font-semibold">
-            <span>🍪 Browser Cookie Session Enabled</span>
+        <div className="pt-4 border-t border-stone-100 dark:border-stone-800 text-center text-[11px] text-stone-500 dark:text-stone-400">
+          <div className="flex items-center justify-center gap-1.5 text-stone-600 dark:text-stone-300 font-medium">
+            <span>🍪 Session saved in secure browser cookies</span>
           </div>
-          <p className="text-[10px] text-stone-400 leading-tight">
-            Activated via environment variable <code className="px-1 py-0.5 rounded bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 font-mono">baepass_Key</code> & password key <code className="px-1 py-0.5 rounded bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 font-mono">bae_Key*</code>.
-          </p>
         </div>
       </div>
     </div>

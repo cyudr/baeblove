@@ -26,6 +26,7 @@ import {
   isUserAuthenticated,
   logoutUser,
 } from './utils/authConfig';
+import { useViewportArea } from './hooks/useViewportArea';
 
 interface AppContentProps {
   isPasswordProtected: boolean;
@@ -33,6 +34,7 @@ interface AppContentProps {
 }
 
 function AppContent({ isPasswordProtected, onLockPortal }: AppContentProps) {
+  const viewport = useViewportArea();
   const {
     activeProfile,
     activeBabyMeasurements,
@@ -67,8 +69,8 @@ function AppContent({ isPasswordProtected, onLockPortal }: AppContentProps) {
   const isDashboard = activeTab === 'dashboard';
 
   return (
-    <div className="min-h-screen bg-stone-100 dark:bg-stone-950 text-stone-900 dark:text-stone-100 flex flex-col font-sans pb-20 md:pb-12 transition-colors">
-      {/* Decluttered Top Navigation (No logging button here) */}
+    <div className="min-h-[100dvh] w-full bg-stone-100 dark:bg-stone-950 text-stone-900 dark:text-stone-100 flex flex-col font-sans transition-colors relative selection:bg-emerald-500 selection:text-white">
+      {/* Fixed Decluttered Top Navigation Bar */}
       <Navbar
         activeTab={activeTab}
         setActiveTab={setActiveTab}
@@ -79,8 +81,10 @@ function AppContent({ isPasswordProtected, onLockPortal }: AppContentProps) {
         onLockPortal={onLockPortal}
       />
 
-      {/* Main Content Area - naturally scrollable for overview and all tabs */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6">
+      {/* Main Content Area - dynamically scaled to viewing area with fluid scrolling */}
+      <main
+        className="flex-1 max-w-7xl w-full mx-auto px-2.5 sm:px-5 lg:px-8 pt-16 pb-24 md:pb-10 transition-all overflow-y-auto"
+      >
         {activeTab === 'dashboard' && (
           <GrowthDashboardView
             onOpenLogModal={() => setIsLogModalOpen(true)}
