@@ -227,6 +227,24 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
             />
           </div>
 
+          {/* Browser Cookie Storage Indicator */}
+          <div className="p-3 rounded-xl bg-emerald-50/80 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/60 text-xs text-stone-700 dark:text-stone-300 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <span className="text-base">🍪</span>
+              <div>
+                <span className="font-bold text-emerald-950 dark:text-emerald-200 block text-[11px]">
+                  Browser Cookie Storage Active
+                </span>
+                <span className="text-[10px] text-stone-500 dark:text-stone-400">
+                  Child profiles are persistently saved in your browser's secure cookies.
+                </span>
+              </div>
+            </div>
+            <span className="px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-900/60 text-emerald-800 dark:text-emerald-300 text-[10px] font-bold shrink-0">
+              Synced ✓
+            </span>
+          </div>
+
           <div className="flex items-center justify-end gap-2 pt-3 border-t border-stone-100">
             <button
               type="button"

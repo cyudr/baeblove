@@ -11,6 +11,12 @@ import {
   ThemeMode,
 } from '../types';
 import { DEFAULT_FORMULA_SETTINGS } from '../data/formulaSources';
+import {
+  getCookie,
+  setCookie,
+  getJSONCookie,
+  setJSONCookie,
+} from '../utils/cookieUtils';
 
 export function getSystemOrTimeTheme(): ThemeMode {
   const hour = new Date().getHours();
@@ -74,6 +80,7 @@ interface AppContextType {
   resetToSampleData: () => void;
   exportDataJSON: () => string;
   importDataJSON: (jsonStr: string) => boolean;
+  isCookieStorageEnabled: boolean;
 }
 
 const STORAGE_KEYS = {
@@ -87,6 +94,11 @@ const STORAGE_KEYS = {
   MILESTONES: 'sprout_milestones_v1',
   KICK_SESSIONS: 'sprout_kicks_v1',
   LOVE_NOTES: 'sprout_love_notes_v1',
+};
+
+const COOKIE_KEYS = {
+  PROFILES: 'bae_profiles',
+  ACTIVE_PROFILE: 'bae_active_profile',
 };
 
 // Realistic sample data
@@ -378,14 +390,31 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [profiles, setProfiles] = useState<ChildProfile[]>(() => {
+    // 1. First attempt to load profiles from browser cookies
+    const cookieProfiles = getJSONCookie<ChildProfile[]>(COOKIE_KEYS.PROFILES);
+    if (cookieProfiles && Array.isArray(cookieProfiles) && cookieProfiles.length > 0) {
+      return cookieProfiles;
+    }
+    // 2. Fallback to localStorage
     const saved = localStorage.getItem(STORAGE_KEYS.PROFILES);
     if (saved) {
-      try { return JSON.parse(saved); } catch (e) { console.error(e); }
+      try {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      } catch (e) {
+        console.error('Error parsing stored profiles from localStorage:', e);
+      }
     }
     return INITIAL_PROFILES;
   });
 
   const [activeProfileId, setActiveProfileId] = useState<string>(() => {
+    // 1. First attempt to load active profile from browser cookies
+    const cookieActive = getCookie(COOKIE_KEYS.ACTIVE_PROFILE);
+    if (cookieActive && profiles.some((p) => p.id === cookieActive)) {
+      return cookieActive;
+    }
+    // 2. Fallback to localStorage
     const saved = localStorage.getItem(STORAGE_KEYS.ACTIVE_PROFILE);
     if (saved && profiles.some((p) => p.id === saved)) return saved;
     return profiles[0]?.id || '';
@@ -469,12 +498,15 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     return INITIAL_LOVE_NOTES;
   });
 
-  // Sync to localStorage
+  // Sync profiles to browser cookies & localStorage
   useEffect(() => {
+    setJSONCookie(COOKIE_KEYS.PROFILES, profiles, 365);
     localStorage.setItem(STORAGE_KEYS.PROFILES, JSON.stringify(profiles));
   }, [profiles]);
 
+  // Sync active profile to browser cookies & localStorage
   useEffect(() => {
+    setCookie(COOKIE_KEYS.ACTIVE_PROFILE, activeProfileId, 365);
     localStorage.setItem(STORAGE_KEYS.ACTIVE_PROFILE, activeProfileId);
   }, [activeProfileId]);
 
@@ -743,6 +775,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         resetToSampleData,
         exportDataJSON,
         importDataJSON,
+        isCookieStorageEnabled: true,
       }}
     >
       {children}

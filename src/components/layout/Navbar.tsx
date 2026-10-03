@@ -12,6 +12,7 @@ import {
   BookOpen,
   Sun,
   Moon,
+  Lock,
 } from 'lucide-react';
 
 interface NavbarProps {
@@ -20,6 +21,8 @@ interface NavbarProps {
   onOpenProfileModal: () => void;
   onOpenExportModal: () => void;
   onOpenFormulaModal: () => void;
+  isPasswordProtected?: boolean;
+  onLockPortal?: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -28,6 +31,8 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenProfileModal,
   onOpenExportModal,
   onOpenFormulaModal,
+  isPasswordProtected = false,
+  onLockPortal,
 }) => {
   const {
     profiles,
@@ -143,6 +148,11 @@ export const Navbar: React.FC<NavbarProps> = ({
                       <RotateCcw className="w-3.5 h-3.5 text-stone-400" />
                       <span>Reset Sample Data</span>
                     </button>
+
+                    <div className="px-3 py-1.5 border-t border-stone-100 dark:border-stone-700 text-[10px] text-stone-400 flex items-center justify-between bg-stone-50/50 dark:bg-stone-850/50">
+                      <span>🍪 Browser Cookie Storage</span>
+                      <span className="text-emerald-600 dark:text-emerald-400 font-bold">Active ✓</span>
+                    </div>
                   </div>
                 </>
               )}
@@ -209,6 +219,18 @@ export const Navbar: React.FC<NavbarProps> = ({
               <FileText className="w-3.5 h-3.5 text-stone-500 dark:text-stone-400" />
               <span className="text-[11px]">Report</span>
             </button>
+
+            {/* Lock Site Button (Visible when password protection is active) */}
+            {isPasswordProtected && onLockPortal && (
+              <button
+                onClick={onLockPortal}
+                title="Lock Site (Password Required to Re-enter)"
+                className="flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold rounded-lg border border-amber-300 dark:border-amber-800 bg-amber-50 dark:bg-amber-950/60 text-amber-900 dark:text-amber-200 hover:bg-amber-100 dark:hover:bg-amber-900 transition-colors shadow-2xs cursor-pointer"
+              >
+                <Lock className="w-3.5 h-3.5 text-amber-700 dark:text-amber-400" />
+                <span className="hidden sm:inline text-[11px]">Lock</span>
+              </button>
+            )}
           </div>
         </div>
       </div>

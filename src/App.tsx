@@ -20,8 +20,17 @@ import { ExportReportModal } from './components/modals/ExportReportModal';
 import { AddMilestoneModal } from './components/modals/AddMilestoneModal';
 import { AddLoveNoteModal } from './components/modals/AddLoveNoteModal';
 import { FormulaSourceModal } from './components/modals/FormulaSourceModal';
+import { PasswordGate } from './components/auth/PasswordGate';
+import {
+  isPasswordProtectionEnabled,
+  isUserAuthenticated,
+  logoutUser,
+} from './utils/authConfig';
 
 function AppContent() {
+  const isProtected = isPasswordProtectionEnabled();
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => isUserAuthenticated());
+
   const {
     activeProfile,
     activeBabyMeasurements,
@@ -37,6 +46,16 @@ function AppContent() {
   const [isLoveNoteModalOpen, setIsLoveNoteModalOpen] = useState(false);
   const [isFormulaModalOpen, setIsFormulaModalOpen] = useState(false);
   const [loveNoteStageLabel, setLoveNoteStageLabel] = useState('Today');
+
+  // If password protection is enabled and user is not yet unlocked, render access gate
+  if (isProtected && !isAuthenticated) {
+    return <PasswordGate onAuthenticated={() => setIsAuthenticated(true)} />;
+  }
+
+  const handleLockPortal = () => {
+    logoutUser();
+    setIsAuthenticated(false);
+  };
 
   // Auto-toggle tabs when profile switches between baby and fetal
   React.useEffect(() => {
@@ -64,6 +83,8 @@ function AppContent() {
         onOpenProfileModal={() => setIsProfileModalOpen(true)}
         onOpenExportModal={() => setIsExportModalOpen(true)}
         onOpenFormulaModal={() => setIsFormulaModalOpen(true)}
+        isPasswordProtected={isProtected}
+        onLockPortal={handleLockPortal}
       />
 
       {/* Main Content Area - naturally scrollable for overview and all tabs */}
